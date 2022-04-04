@@ -7,52 +7,13 @@
     <script src="libraries/p5.dom.js" type="text/javascript"></script>
     <script src="libraries/p5.sound.js" type="text/javascript"></script>
     <script src="sketch.js" type="text/javascript"></script>
-    <style>
-      
 
-      main {
-        padding: 20px;
-        margin: 50px;
-        text-align: center;
-        box-shadow: 0px 0px 5px grey;
-        font-family: Roboto, sans-serif;
-      }
+    <!-- styles -->
+    <link rel="stylesheet" href="/style.css">
 
-      h1 {
-        box-shadow: 0px 0px 1px black;
-        padding: 2px 0px;
-        margin-top: 5px;
-      }
-
-      section {
-        box-shadow: 0px 0px 1px black;
-        padding: 5px 3px;
-      }
-
-      #entrants, #tickets {
-        box-shadow: 0px 0px 1px black;
-        padding: 2px 5px;
-      }
-
-      #results {
-        padding: 5px 12px;
-        width: 100px;     
-        margin-left: 44%;   
-      }
-      
-      #start {
-        box-shadow: -1px -1px 0px grey;
-        padding: 3px 10px;
-        font-size: 0.9em;
-        background-color: white;
-        text-shadow: 0px 0px 1px grey;
-      }
-
-      button:hover {
-        background-color: rgb(151, 109, 109);
-      }
-
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   </head>
   <body>
       <main>
@@ -64,8 +25,12 @@
       <p>If you want to fill the matrix from scratch then go ahead. </p>
 
       <div id="table-container"></div>
-      <button id="random-button">Click me to randomize</button>
 
+      <div class="control-buttons"> 
+        <button class=" cypher-button" id="random-button">Click me to randomize</button>
+        <button class=" cypher-button" id="erase-button">Erase Matrix</button>
+      </div>
+      
 
     </main>
   </body>

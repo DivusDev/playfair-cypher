@@ -2,6 +2,12 @@
 //create a 5x5 matrix
 let playfairMatrix = new Array(5).fill(0).map( v => new Array(5).fill(''))
 let takenLetters = {}
+//initialize letters
+for (let i = 0; i < 26; i++) {
+  if (i == 9) continue      //special case we skip j
+  let c = String.fromCharCode( i + 97)
+  takenLetters[c] = false
+}
 
 console.log(playfairMatrix)
 
@@ -27,15 +33,18 @@ function setup() {
       cell.parent(`row${i}`)
       let textInput = createElement('input')
       textInput.parent(`cell${i} ${k}`)
+      textInput.class('matrix-input')
       textInput.id(`r${i}-c${k}`)
 
       textInput.input(PlayfairMatrixInput)
     }
   }
 
-  //create fillButton
-  let button = select('#random-button')
-  button.mousePressed(randomizePlayfairMatrix)
+  
+  let fillButton = select('#random-button')                   //create fill button
+  fillButton.mousePressed(randomizePlayfairMatrix)
+  let eraseButton = select('#erase-button')                   //create erase button
+  eraseButton.mousePressed(erasePlayfairMatrix)
 
   noLoop();
 }
@@ -63,9 +72,18 @@ function draw() {
 
 // Forces Lowercase input and allows 
 let PlayfairMatrixInput = (e) => {
+
     
     //reference input cell
     let textInput = e.target
+
+    //**** EDGE CASES ****
+
+    //handle delete button press
+    if (e.data == null) return erasePlayfairMatrix();
+
+    //handle spam input
+    if (textInput.value.length > 2) return textInput.value = ''
 
     //get the row and column from generated id
     let row = textInput.id[1]
@@ -74,6 +92,7 @@ let PlayfairMatrixInput = (e) => {
     // retrieve old and new letters
     let oldLetter =  textInput.value[0]
     let newLetter =  textInput.value[1];
+    console.log(newLetter, takenLetters[newLetter], oldLetter, takenLetters[oldLetter])
     
       
     if (!/^[A-Za-z]*$/g.test(textInput.value)) {                  //if an invalid character has been entered
@@ -94,8 +113,8 @@ let PlayfairMatrixInput = (e) => {
 
 
     // new letter not taken
-    //standardize and mark letters
-    markLetter(oldLetter)
+    // if old letter is marked unmark
+    if (takenLetters[oldLetter]) markLetter(oldLetter)
 
     //set input
     modifyInput(textInput, newLetter, row, column)
@@ -122,6 +141,22 @@ let modifyInput = (textInputReference, newValue, row, column, mark = true) =>{
   newValue = markLetter(newValue)
   textInputReference.value =  newValue
   playfairMatrix[row][column] = newValue;
+}
+
+let erasePlayfairMatrix = () => {
+  // mark all letters as unused
+  for (let i = 0; i < 26; i++) {
+    if (i == 9) continue      //special case we skip j
+    let c = String.fromCharCode( i + 97)
+    takenLetters[c] = false
+  }
+
+  for (let row = 0; row < 5; row++) {
+    for (let col = 0; col < 5; col++) {
+      let input = document.querySelector(`#r${row}-c${col}`)
+      modifyInput(input, '', row, col)
+    }
+  }
 }
 
 
@@ -159,5 +194,4 @@ let randomizePlayfairMatrix = () => {
       i++;
     }
   }
-  console.log(playfairMatrix, takenLetters)  
 }

@@ -1,0 +1,81 @@
+
+main {
+padding: 20px;
+margin: 50px;
+text-align: center;
+font-family: Roboto, sans-serif;
+font-family: 'Poppins', sans-serif;
+
+}
+
+h1 {
+padding: 2px 0px;
+margin-top: 5px;
+font-family: 'Open Sans', sans-serif;
+font-family: 'Poppins', sans-serif;
+
+
+}
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+#table-container{
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.matrix-input {
+    height: 1.5rem;
+    width: 1.5rem;
+    text-align: center;
+    padding: .5rem;
+    font-size: 1.5rem;
+    background-color: aquamarine;
+    border-radius: 5px;
+    border: aqua 2px solid;
+    font-weight: bold;
+    transition: .3s;
+}
+
+.matrix-input:hover {
+    font-size: 3rem;
+    cursor: pointer;
+    height: 3rem;
+    width: 3rem;
+}
+
+
+
+.cypher-button {
+    font-size: 1.2rem;
+    background-color: aquamarine;
+    text-align: center;
+    padding: .5rem 3rem;
+    font-size: 1.5rem;
+    background-color: aquamarine;
+    border-radius: 25px;
+    border: aqua 2px solid;
+    transition: .3s;
+    margin: 0 20px;
+    font-family: 'Poppins', sans-serif;
+
+}
+
+.cypher-button:hover {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    cursor: pointer;
+    background-color: aqua;
+    font-size: 1.6rem;
+    border-color: aquamarine;
+}
+
+
+.control-buttons{
+    display: flex;
+    justify-content: center;
+}
+
