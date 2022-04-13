@@ -21,6 +21,7 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+/* matrix css */
 
 #table-container{
     display: flex;
@@ -49,6 +50,7 @@ body {
 }
 
 
+/* button css */
 
 .cypher-button {
     font-size: 1.2rem;
@@ -60,9 +62,10 @@ body {
     border-radius: 25px;
     border: aqua 2px solid;
     transition: .3s;
-    margin: 0 20px;
+    margin: 10px 20px;
     font-family: 'Poppins', sans-serif;
-
+    flex-basis: 45%;
+    
 }
 
 .cypher-button:hover {
@@ -76,6 +79,32 @@ body {
 
 .control-buttons{
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+
 }
 
+
+
+/* plain text and cypher text input */
+.text-boxes {
+
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+
+}
+
+.input-text-container {
+    width: 40%;
+}
+
+.input-text {
+    height: 400px;
+    width: 100%;
+    border: 2px solid aquamarine;
+    border-radius: 10px;
+    resize:none;
+    padding: 1rem;
+    font-family: 'Poppins';
+}

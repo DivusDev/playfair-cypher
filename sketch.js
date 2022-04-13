@@ -1,4 +1,7 @@
 
+
+//Global variables 
+
 //create a 5x5 matrix
 let playfairMatrix = new Array(5).fill(0).map( v => new Array(5).fill(''))
 let takenLetters = {}
@@ -9,9 +12,13 @@ for (let i = 0; i < 26; i++) {
   takenLetters[c] = false
 }
 
-console.log(playfairMatrix)
+let plaintext = ''
+let cyphertext = ''
 
-//Global variables 
+
+
+// dom References
+
 
 
 //Executed only once
@@ -36,7 +43,7 @@ function setup() {
       textInput.class('matrix-input')
       textInput.id(`r${i}-c${k}`)
 
-      textInput.input(PlayfairMatrixInput)
+      textInput.input(playfairMatrixInput)
     }
   }
 
@@ -46,6 +53,11 @@ function setup() {
   let eraseButton = select('#erase-button')                   //create erase button
   eraseButton.mousePressed(erasePlayfairMatrix)
 
+  
+  var plaintextInput = select('#plaintext')                   // textInputs
+  var cyphertextInput = select('#cyphertext')     
+  plaintextInput.input(plaintextInputHandler)
+  cyphertextInput.input(cyphertextInputHandler)
   noLoop();
 }
 
@@ -70,77 +82,95 @@ function draw() {
 
 // Functions
 
-// Forces Lowercase input and allows 
-let PlayfairMatrixInput = (e) => {
+// **************** MATRIX INPUT ****************
 
-    
+// Forces Lowercase input and allows 
+let playfairMatrixInput = (e) => {
+  
     //reference input cell
     let textInput = e.target
 
     //**** EDGE CASES ****
 
-    //handle delete button press
-    if (e.data == null) return erasePlayfairMatrix();
+    console.log(e)
 
     //handle spam input
     if (textInput.value.length > 2) return textInput.value = ''
 
     //get the row and column from generated id
-    let row = textInput.id[1]
-    let column = textInput.id[4]
+    let row = parseInt(textInput.id[1])
+    let column = parseInt(textInput.id[4])
 
     // retrieve old and new letters
-    let oldLetter =  textInput.value[0]
-    let newLetter =  textInput.value[1];
-    console.log(newLetter, takenLetters[newLetter], oldLetter, takenLetters[oldLetter])
+    let oldLetter = playfairMatrix[row][column]
+    let newLetter =  e.data
+
+     //handle delete button press
+     if (e.inputType == "deleteContentBackward") {
+      // delete the current and focus one back
+      //find one back
+      if (column === 0) {
+        if (row !== 0) {
+          column = 4
+          row--
+        }
+      } else {
+        column--
+      }
+
+      let nextInput = document.querySelector(`#r${row}-c${column}`)
+      markLetter(oldLetter, false)
+      modifyInput(textInput, '', row, column)
+      nextInput.focus()
+      return
+    } 
+    
+
+    
     
       
     if (!/^[A-Za-z]*$/g.test(textInput.value)) {                  //if an invalid character has been entered
+      markLetter(oldLetter, false)
       modifyInput(textInput, '', row, column)                     //set to nothing
+      // focus next input
+
       return
     }
 
-    // if no new letter (aka there is only one letter) 
-    if (!newLetter) {
-      // if the proposed letter is taken
-      console.log(oldLetter)
-      if (checkIfTaken(oldLetter)) return  modifyInput(textInput, '', row, column)
-      return modifyInput(textInput, oldLetter, row, column)
-    }
-
     // if the new letter is taken dont allow change
-    if (checkIfTaken(newLetter)) return modifyInput(textInput, oldLetter , row, column, false)
+    if (checkIfTaken(newLetter)) return modifyInput(textInput, oldLetter, row, column)                     //set to nothing
 
 
     // new letter not taken
     // if old letter is marked unmark
-    if (takenLetters[oldLetter]) markLetter(oldLetter)
+    markLetter(oldLetter, false)
 
     //set input
     modifyInput(textInput, newLetter, row, column)
 }
 
-let markLetter = (letter) => {
+let markLetter = (letter, toMark = true) => {
   if (!letter) return ""
-  letter = letter.toLowerCase()
+  letter = letter.toUpperCase()
   //special case I and J  -  set J to I
-  letter = letter == 'j' ? 'i' : letter
-  takenLetters[letter] = !takenLetters[letter]
+  letter = letter == 'J' ? 'I' : letter
+  takenLetters[letter] = toMark
   return letter
 }
 
 let checkIfTaken = (letter) => {
   if(!letter) return false
-  letter = letter.toLowerCase()
+  letter = letter.toUpperCase()
   //special case I and J -  set J to I
-  letter = letter == 'j' ? 'i' : letter
+  letter = letter == 'J' ? 'I' : letter
   return !!takenLetters[letter] 
 }
 
-let modifyInput = (textInputReference, newValue, row, column, mark = true) =>{
+let modifyInput = (textInputReference, newValue, row, column) =>{
   newValue = markLetter(newValue)
   textInputReference.value =  newValue
-  playfairMatrix[row][column] = newValue;
+  playfairMatrix[row][column] = newValue
+  if (newValue != '') focusNextInput(row, column)
 }
 
 let erasePlayfairMatrix = () => {
@@ -195,3 +225,84 @@ let randomizePlayfairMatrix = () => {
     }
   }
 }
+
+const focusNextInput = (row, column) => {
+  //find one forward
+  if (column === 4) {
+    if (row !== 4) {
+      column = 0
+      row++
+    }
+  } else {
+    column++
+  }
+  console.log(`Focusing, nextinput ${`#r${row}-c${column}`}`)
+
+  let nextInput = document.querySelector(`#r${row}-c${column}`)
+  nextInput.focus()
+}
+
+
+
+
+
+// **************** TEXT INPUT ****************
+
+const changeToBiGrams = (string) => {
+    //remove all spaces and non alpha characters > replace all J or j with i > make uppercase > Replace repeating characters with X 
+    string = string.replace(/\s+|[^a-zA-Z]+/g, '').replace(/[jJ]/g, 'i').toUpperCase().replace(/(.)(\1+)/g, (match, p1, p2) => {
+      return p1 + 'X'.repeat(p2.length)
+    })
+    // remove all repeated characters and replace with X
+    
+    // add spaces
+    bigrams = ''
+    string.split('').forEach( (letter, index) => {
+      bigrams += letter
+      if (index % 2 == 1 && index != string.length - 1) {
+        bigrams += ' '
+      }
+    })
+    return bigrams
+}
+
+const plaintextInputHandler = e => {
+    let inputValue = e.target.value
+    if (e.data != null) {
+      // a single character was entered
+      // check the last character entered
+      // if theyre the same then make the new character an X
+      inputValue = inputValue.replace(/(.)[X\s]*(.)$/g, (match, p1, p2) => {
+        if (p1 == p2.toUpperCase()) {
+          //they are the same change to X
+          return match.slice(0, -1) + 'X'
+        }
+        // do nothing theyre not the same
+        return match
+      })
+    }
+    let bigramValue = changeToBiGrams(inputValue)
+    e.target.value = bigramValue
+}
+
+const cyphertextInputHandler = e => {
+  let inputValue = e.target.value
+    if (e.data != null) {
+      // a single character was entered
+      // check the last character entered
+      // if theyre the same then make the new character an X
+      inputValue = inputValue.replace(/(.)[X\s]*(.)$/g, (match, p1, p2) => {
+        if (p1 == p2.toUpperCase()) {
+          //they are the same change to X
+          return match.slice(0, -1) + 'X'
+        }
+        // do nothing theyre not the same
+        return match
+      })
+    }
+    let bigramValue = changeToBiGrams(inputValue)
+    e.target.value = bigramValue
+}
+
+
+
