@@ -21,6 +21,13 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+/* controls css */
+
+.controls {
+    display: flex;
+    justify-content: center;
+}
+
 /* matrix css */
 
 #table-container{
@@ -53,18 +60,17 @@ body {
 /* button css */
 
 .cypher-button {
-    font-size: 1.2rem;
+    font-size: .8rem;
     background-color: aquamarine;
     text-align: center;
     padding: .5rem 3rem;
-    font-size: 1.5rem;
     background-color: aquamarine;
     border-radius: 25px;
     border: aqua 2px solid;
     transition: .3s;
     margin: 10px 20px;
     font-family: 'Poppins', sans-serif;
-    flex-basis: 45%;
+    flex-basis: 40%;
     
 }
 
@@ -72,7 +78,7 @@ body {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     cursor: pointer;
     background-color: aqua;
-    font-size: 1.6rem;
+    font-size: .9rem;
     border-color: aquamarine;
 }
 

@@ -2,10 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hamilton Lottery Simulator</title>
+    <title>Playfair Cypher</title>
     <script src="libraries/p5.js" type="text/javascript"></script>
     <script src="libraries/p5.dom.js" type="text/javascript"></script>
     <script src="libraries/p5.sound.js" type="text/javascript"></script>
+    <script src="texts.js" type="text/javascript"></script>
     <script src="sketch.js" type="text/javascript"></script>
 
     <!-- styles -->
@@ -34,17 +35,19 @@
         Enter the matrix to be used for playfair cypher encoding/decoding
       </p>
       <p>If you want to fill the matrix from scratch then go ahead. </p>
+      <div class="controls">
+        <div id="table-container"></div>
+  
+        <div class="control-buttons"> 
+          <button class=" cypher-button" id="random-button">Click me to randomize</button>
+          <button class=" cypher-button" id="erase-button">Erase Matrix</button>
+          <button class=" cypher-button" id="encode-plaintext">Encode Plaintext</button>
+          <button class=" cypher-button" id="decode-cyphertext">Decode Cypher Text</button>
+          <button class=" cypher-button" id="random-plaintext">Random Plaintext</button>
+          <button class=" cypher-button" id="random-cyphertext">Random Cypher Text</button>
+          <button class=" cypher-button" id="break-cyphertext">Break Cypher Text</button>
+        </div>
 
-      <div id="table-container"></div>
-
-      <div class="control-buttons"> 
-        <button class=" cypher-button" id="random-button">Click me to randomize</button>
-        <button class=" cypher-button" id="erase-button">Erase Matrix</button>
-        <button class=" cypher-button" id="encode-plaintext">Encode Plaintext</button>
-        <button class=" cypher-button" id="decode-cyphertext">Decode Cypher Text</button>
-        <button class=" cypher-button" id="random-plaintext">Random Plaintext</button>
-        <button class=" cypher-button" id="random-cyphertext">Random Cypher Text</button>
-        <button class=" cypher-button" id="break-cyphertext">Break Cypher Text</button>
       </div>
       
 
