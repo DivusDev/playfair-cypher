@@ -145,7 +145,7 @@ let playfairMatrixInput = (e) => {
     }
 
     // if the new letter is taken dont allow change
-    if (checkIfTaken(newLetter)) return modifyInput(textInput, oldLetter, row, column)                     //set to nothing
+    if (isTaken(newLetter)) return modifyInput(textInput, oldLetter, row, column)                     //set to nothing
 
 
     // new letter not taken
@@ -171,7 +171,7 @@ let markLetter = (letter, toMark = true) => {
 /**
  * return a boolean of whether the letter has been used or not
  */
-let checkIfTaken = (letter) => {
+let isTaken = (letter) => {
   if(!letter) return false
   letter = letter.toUpperCase()
   //special case I and J -  set J to I
@@ -194,8 +194,8 @@ let erasePlayfairMatrix = () => {
   // mark all letters as unused
   for (let i = 0; i < 26; i++) {
     if (i == 9) continue      //special case we skip j
-    let c = String.fromCharCode( i + 97)
-    takenLetters[c] = false
+    let c = String.fromCharCode( i + 97 )
+    markLetter(c, false) 
   }
 
   for (let row = 0; row <  MATRIX_SIZE ; row++) {
@@ -218,7 +218,7 @@ let randomizePlayfairMatrix = () => {
   for (let i = 0; i < 26; i++) {
     if (i == 9) continue      //special case we skip j
     let c = String.fromCharCode( i + 97)
-    if (!takenLetters[c]) {
+    if (!isTaken(c)) {
       lettersToUse.push(c)
     }
   }

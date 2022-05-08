@@ -21,7 +21,7 @@ import seaborn as sns; sns.set_theme()
 frequencies_object = {}                # Frequencies Object
 frequencies_matrix = []         # Frequencies Matrix
 labels_matrix = []              # Matrix of labels for heatmap
-lastCharacter = ''              # last Character Seen
+lastCharacter = 'A'              # last Character Seen
 count = 0                       # total characters seen per file
 
 
@@ -68,24 +68,32 @@ for filename in text_file_names:
             character = character.capitalize()
             # force J to I
             if character == 'J': character = 'I'
-
-            # Split logic based on count 
-            if count % 2 == 1:
-                # Count is odd, write down current duo
                 
-                if lastCharacter == character:
-                    # special Case for duplicate letters 
-                    lastCharacter = character
-                    frequencies_object[character + 'X'] += 1                               # Add count to object
-                    frequencies_matrix[ord(character) - 65][ord('X') - 65] += 1     # Add count to matrix
-                    count -= 1
-                else:
-                    # write down current duo
-                    frequencies_object[lastCharacter + character] += 1                               # Add count to object
-                    frequencies_matrix[ord(lastCharacter) - 65][ord(character) - 65] += 1     # Add count to matrix
-            else:
-                # Count is even, remember character and continue
+            if lastCharacter == character:
+                # special Case for duplicate letters 
                 lastCharacter = character
+                # pseudo add an X between duplicate characters, as by playfair convention
+                # count both the first pair and second pair of the 3 pair frequency
+
+                # AA -> AXA 
+
+                # Counting AX
+                frequencies_object[character + 'X'] += 1                               # Add count to object
+                frequencies_matrix[ord(character) - 65][ord('X') - 65] += 1             # Add count to matrix
+
+                # Counting XA
+                frequencies_object['X' + character] += 1                               # Add count to object
+                frequencies_matrix[ord('X') - 65][ord(character) - 65] += 1             # Add count to matrix
+
+                # Account for double count
+                count += 1
+            else:
+                # write down current duo
+                frequencies_object[lastCharacter + character] += 1                               # Add count to object
+                frequencies_matrix[ord(lastCharacter) - 65][ord(character) - 65] += 1     # Add count to matrix
+
+            # remember character and continue
+            lastCharacter = character
             count += 1
 
 
@@ -95,6 +103,11 @@ for filename in text_file_names:
 # All passed files have been processed.
 # Produce json output
 
+# show total characters processed to user
+total_characters = count
+
+print(f"Total Characters Processed: {total_characters}")
+
 
 # Open output file
 output = open('english_letter_frequencies.json', 'w')
@@ -103,7 +116,8 @@ output = open('english_letter_frequencies.json', 'w')
 
 Frequencies = {
     'object': frequencies_object,
-    'matrix': frequencies_matrix
+    'matrix': frequencies_matrix,
+    "count": total_characters
 }
 
 # create json object of frequencies
@@ -133,7 +147,7 @@ formatted_text = (np.asarray(["{0}\n{1}".format(
 
 
 # Change size of figure so boxes arnt so tiny
-fig, ax = plt.subplots(figsize=(30, 20))
+fig, ax = plt.subplots(figsize=(60, 30))
 
 # Actually create heatmap, set color and labels inside squares
 hm = sns.heatmap(df, annot=formatted_text, fmt="", linewidths=1, cmap="Spectral_r")
