@@ -63,7 +63,7 @@ for filename in text_file_names:
         # Run through all characters in line
         for character in line:
             # if the current character is not a alphabetical character skip it
-            if not character.isalpha(): continue
+            if ord(character) < 65 or ord(character) > 90 and ord(character) < 97 or ord(character) > 122 : continue
             # capitalize the character, playfair cypher only uses capitals
             character = character.capitalize()
             # force J to I
