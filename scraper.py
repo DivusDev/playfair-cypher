@@ -31,9 +31,9 @@ for i in range(26):
     labels_matrix.append([])
     for j in range(26):
         pair = chr(65 + i) + chr(65 + j)
-        frequencies_object[pair] = 0
         frequencies_matrix[i].append(0)
         labels_matrix[i].append(pair)
+        frequencies_object[pair] = 0
 
 
 # Retrieve all filenames from ./scrape_texts directory
@@ -47,15 +47,18 @@ if len(sys.argv) != 1:
 
 # ************************************* PARSING *************************************
 
-
-
+# Keep count of all characters processed and for each file
+total_characters = 0
+file_character_count = 0
 # Run through all files passed as arguments
 for filename in text_file_names:
-    
+    # Add and reset counts
+    total_characters += file_character_count
+    file_character_count = 0
+
     # Open current file
     currentFile = open('scrape_texts/' + filename, 'r')
-    # New file, reset count
-    count = 0
+    
 
     # Run through all lines in opened file
     for line in currentFile:
@@ -86,7 +89,7 @@ for filename in text_file_names:
                 frequencies_matrix[ord('X') - 65][ord(character) - 65] += 1             # Add count to matrix
 
                 # Account for double count
-                count += 1
+                file_character_count += 1
             else:
                 # write down current duo
                 frequencies_object[lastCharacter + character] += 1                               # Add count to object
@@ -94,7 +97,7 @@ for filename in text_file_names:
 
             # remember character and continue
             lastCharacter = character
-            count += 1
+            file_character_count += 1
 
 
 # ************************************* DATA PROCESSING *************************************
@@ -104,18 +107,16 @@ for filename in text_file_names:
 # Produce json output
 
 # show total characters processed to user
-total_characters = count
-
 print(f"Total Characters Processed: {total_characters}")
 
 
 # Open output file
-output = open('english_letter_frequencies.json', 'w')
+output = open('test_english_letter_frequencies.json', 'w')
 
 # create a compound object containing both object and matrix interpretation
 
 Frequencies = {
-    'object': frequencies_object,
+    'map': frequencies_object,
     'matrix': frequencies_matrix,
     "count": total_characters
 }

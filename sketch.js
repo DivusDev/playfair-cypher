@@ -1,29 +1,40 @@
 
 
-//constants
+// constants
 const  MATRIX_SIZE  = 5
 
-//Global variables 
+// ********** Global variables **********
 
 
-
-//create a 5x5 matrix
+// create a 5x5 matrix
 let playfairMatrix = new Array( MATRIX_SIZE ).fill(0).map( v => new Array( MATRIX_SIZE ).fill(''))
 let takenLetters = {}
-//initialize letters
+// initialize letters
 for (let i = 0; i < 26; i++) {
-  if (i == 9) continue      //special case we skip j
+  if (i == 9) continue      // special case we skip j
   let c = String.fromCharCode( i + 97)
   takenLetters[c] = false
 }
-//display variables
-let plaintext = ''
-let cyphertext = ''
+// display variables
+var plaintext = ''
+var cyphertext = ''
 
-//encoding variables
-let positionMap = {}
+// encoding variables
+var positionMap = {}
 
+// Create English letter frequencies mapping from JSON file
+var englishLetterFrequencies
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "english_letter_frequencies.json");
+xhr.addEventListener('load', processJSON);
+xhr.send();
 
+function processJSON(event) {
+  var json = this.responseText;
+  englishLetterFrequencies = JSON.parse(json);
+  console.log(englishLetterFrequencies)
+
+}
 
 //Executed only once
 function setup() {
@@ -62,18 +73,20 @@ function setup() {
   }
 
   
-  let fillButton = select('#random-button')                   //assign fill button functionality
+  let fillButton = select('#random-button')                        //assign fill button functionality
   fillButton.mousePressed(randomizePlayfairMatrix)
-  let eraseButton = select('#erase-button')                   //assign erase button functionality
+  let eraseButton = select('#erase-button')                        //assign erase button functionality
   eraseButton.mousePressed(erasePlayfairMatrix)
   let encodeButton = select('#encode-plaintext')                   //assign encode button functionality
   encodeButton.mousePressed(encodeButtonHandler)
-  let decodeButton = select('#decode-cyphertext')                   //assign decode button functionality
+  let decodeButton = select('#decode-cyphertext')                  //assign decode button functionality
   decodeButton.mousePressed(decodeButtonHandler)
-  let randomPlaintextButton = select('#random-plaintext')                   //assign decode button functionality
+  let randomPlaintextButton = select('#random-plaintext')          //assign random button functionality
   randomPlaintextButton.mousePressed(setRandomPlaintext)
+  let breakCypherTextButton = select('#break-cyphertext')          //assign random button functionality
+  breakCypherTextButton.mousePressed(breakCypherText)
   
-  var plaintextInput = select('#plaintext')                   // textInputs
+  var plaintextInput = select('#plaintext')                        // textInputs
   var cyphertextInput = select('#cyphertext')     
   plaintextInput.input(plaintextInputHandler)
   cyphertextInput.input(cyphertextInputHandler)
@@ -370,13 +383,15 @@ const setRandomPlaintext = () => {
  * @returns {string}
  */
 const codeBigram = (string, encoding) => {
-
-  //edge cases
+  // edge cases
   if (string.length < 2) return string
   if (string.length > 2) throw 'Must pass a string with length < 2 to codeBigram'
   let a = string[0]
   let b = string[1]
   if (encoding === undefined) throw 'Must specifiy whether encoding or decoding in codeBigram'
+  // short circuit when presented with J
+  if (a == 'J' || b == 'J') return string
+
   let [aRow, aCol] = positionMap[a]
   let [bRow, bCol] = positionMap[b]
 
@@ -452,6 +467,25 @@ const decodeButtonHandler = e => {
 }
  
 
+// **************** BREAKING ****************
 
+
+const breakCypherText = () => {
+  setPositionMap()
+
+  console.log(englishLetterFrequencies)
+  let populationFrequencies = englishLetterFrequencies.map
+  let populationCount = englishLetterFrequencies.count
+
+  let [ cyphertextBiletterFrequencies, empiricalCount ] = computeBiLetterFrequencies(cyphertext)
+  let [ plaintextBiletterFrequencies, empiricalPlaintextCount ] = computeBiLetterFrequencies(plaintext)
+
+  let encodedPopulationFrequencies = encodeFrequencyMap(populationFrequencies)
+
+  let plaintextfrequencyChiSquaredValue = frequencyChiSquaredTest(populationFrequencies, populationCount, plaintextBiletterFrequencies, empiricalPlaintextCount) 
+  let encodedfrequencyChiSquaredValue = frequencyChiSquaredTest(encodedPopulationFrequencies, populationCount, cyphertextBiletterFrequencies, empiricalCount)  
+ 
+  console.log(plaintextfrequencyChiSquaredValue, encodedfrequencyChiSquaredValue)
+}
 
 
